@@ -1,1 +1,5 @@
-# compose-grafana-prometheus
+# `Compose` Grafana + Prometheus
+
+```sh
+docker compose up -d
+```

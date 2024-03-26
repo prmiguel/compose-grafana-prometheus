@@ -1,0 +1,38 @@
+---
+version: '3.6'
+services:
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: prometheus
+    restart: unless-stopped
+    networks:
+      - monitoring
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus_data:/prometheus
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-server
+    restart: unless-stopped
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_INSTALL_PLUGINS=
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-provisioning/datasources:/etc/grafana/provisioning/datasources
+
+networks:
+  monitoring:
+ 
+volumes:
+  grafana_data:
+  prometheus_data:
